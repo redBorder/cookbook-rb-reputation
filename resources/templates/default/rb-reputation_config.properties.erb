@@ -1,0 +1,60 @@
+#Malware
+malware.server=0.0.0.0:7777
+malware.query.ms=60000
+malware.zkWorkspace=rb_reputation
+malware.peticion.timeout=1M
+malware.workers=<%= node["redborder"]["manager"]["rb-reputation"]["workers"] %>
+
+<% if !node["redborder"]["proxy"].nil? and !node["redborder"]["proxy"]["address"].nil? and !node["redborder"]["proxy"]["address"].to_s.empty? %>
+malware.proxy=<%= "#{node["redborder"]["proxy"]["address"]}:#{node["redborder"]["proxy"]["port"]}" %>
+<% end %>
+
+<% modules = [] %>
+<% modules << "net.redborder.malware.modules.data.LocalCacheDataModule" %>
+<% modules << "net.redborder.malware.modules.data.AeroSpikeDataModule" %>
+<% modules << "net.redborder.malware.modules.data.OTXDataModule:2" %>
+
+#Output Modules
+malware.controller.outputmodules=net.redborder.malware.modules.output.AeroSpikeOutputModule
+
+#LocalCache
+malware.cache.ttl=2M
+
+#Kafka & ZooKeeper
+zookeeper.connect=<%= @zk_hosts %>
+zookeeper.session.timeout.ms=400
+zookeeper.sync.time.ms=200
+auto.commit.interval.ms=1000
+
+#IncrementalList
+malware.incrementallist.offset=2
+malware.incrementallist.incremental.ttl=15M
+malware.incrementallist.revision.ttl=1H
+
+# OTX
+otx.aerospike.servers=<%= @aerospike_ips.nil? ? "127.0.0.1:3000" : (@aerospike_ips.first(5).map{|x| "#{x.name}:3000"}.join(",")) %>
+otx.aerospike.clientTimeout=500
+otx.aerospike.collection=ipScores
+otx.aerospike.namespace=malware
+
+otx.interval=15M
+
+# VirusTotal
+<% if !node["redborder"]["manager"]["loaders"]["virustotal_api_key"].nil? %>
+<% modules << "net.redborder.malware.modules.data.VirusTotalDataModule:2" %>
+virustotal.apikey=<%= node["redborder"]["manager"]["loaders"]["virustotal_api_key"] %>
+<% end %>
+
+#MetaScan
+<% if !node["redborder"]["manager"]["loaders"]["metascan_api_key"].nil? %>
+<% modules << "net.redborder.malware.modules.data.MetaScanDataModule:2" %>
+metascan.apikey=<%= node["redborder"]["manager"]["loaders"]["metascan_api_key"] %>
+<% end %>
+
+#Data Modules
+malware.controller.datamodules=<%= modules.join(",") %>
+
+#AeroSpike
+aerospike.namespace=malware
+aerospike.servers=<%= @aerospike_ips.nil? ? "127.0.0.1:3000" : (@aerospike_ips.first(5).map{|x| "#{x.name}:3000"}.join(",")) %>
+aerospike.clientTimeout=500

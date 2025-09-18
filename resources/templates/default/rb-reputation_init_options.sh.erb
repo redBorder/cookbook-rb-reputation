@@ -1,0 +1,3 @@
+#!/bin/bash
+
+JVM_OPTS="-XX:+UseConcMarkSweepGC -Xmx<%= [(@memory.to_i / 1024.0).to_i, 10].max %>m -Xms<%= [(@memory.to_i / 1024.0).to_i, 10].max %>m"
