@@ -1,4 +1,4 @@
-# Cookbook:: rbreputation
+# Cookbook:: rb-reputation
 # Provider:: config
 
 action :add do
@@ -40,7 +40,7 @@ action :add do
       group group
       mode '0644'
       retries 2
-      cookbook 'rbreputation'
+      cookbook 'rb-reputation'
       variables(memory: memory)
       notifies :restart, 'service[rb-reputation]', :delayed
     end
@@ -51,8 +51,8 @@ action :add do
       group group
       mode '0644'
       retries 2
-      cookbook 'rbreputation'
-      variables(memory: memory)
+      cookbook 'rb-reputation'
+      variables(memory: memory, aerospike_ips: aerospike_ips)
       notifies :restart, 'service[rb-reputation]', :delayed
     end
 
@@ -62,7 +62,7 @@ action :add do
       group group
       mode '0644'
       retries 2
-      cookbook 'rbreputation'
+      cookbook 'rb-reputation'
       variables(memory: memory)
       notifies :restart, 'service[rb-reputation]', :delayed
     end

@@ -1,4 +1,4 @@
-module Rbreputation
+module Reputation
   module Helpers
   end
 end

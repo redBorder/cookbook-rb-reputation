@@ -1,9 +1,10 @@
-# Cookbook:: rbreputation
+# Cookbook:: rb-reputation
 # Resource:: config
 
 actions :add, :remove, :register, :deregister
 default_action :add
 
+attribute :memory, kind_of: Integer, default: 524288
 attribute :config_dir, kind_of: String, default: '/etc/rb-reputation'
 attribute :log_dir, kind_of: String, default: '/var/log/rb-reputation'
 attribute :name, kind_of: String, default: 'localhost'
