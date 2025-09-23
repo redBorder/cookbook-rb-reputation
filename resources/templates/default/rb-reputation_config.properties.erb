@@ -32,7 +32,7 @@ malware.incrementallist.incremental.ttl=15M
 malware.incrementallist.revision.ttl=1H
 
 # OTX
-otx.aerospike.servers=<%= @aerospike_ips.nil? ? "127.0.0.1:3000" : (@aerospike_ips.first(5).map{|x| "#{x.name}:3000"}.join(",")) %>
+otx.aerospike.servers=<%= @aerospike_ips.nil? ? "127.0.0.1:3000" : (@aerospike_ips.first(5).map{|x| "#{x}:3000"}.join(",")) %>
 otx.aerospike.clientTimeout=500
 otx.aerospike.collection=ipScores
 otx.aerospike.namespace=malware
@@ -40,13 +40,13 @@ otx.aerospike.namespace=malware
 otx.interval=15M
 
 # VirusTotal
-<% if !node["redborder"]["manager"]["loaders"]["virustotal_api_key"].nil? %>
+<% if node["redborder"]["manager"]["loaders"] && node["redborder"]["manager"]["loaders"]["virustotal_api_key"] %>
 <% modules << "net.redborder.malware.modules.data.VirusTotalDataModule:2" %>
 virustotal.apikey=<%= node["redborder"]["manager"]["loaders"]["virustotal_api_key"] %>
 <% end %>
 
 #MetaScan
-<% if !node["redborder"]["manager"]["loaders"]["metascan_api_key"].nil? %>
+<% if node["redborder"]["manager"]["loaders"] && node["redborder"]["manager"]["loaders"]["metascan_api_key"] %>
 <% modules << "net.redborder.malware.modules.data.MetaScanDataModule:2" %>
 metascan.apikey=<%= node["redborder"]["manager"]["loaders"]["metascan_api_key"] %>
 <% end %>
@@ -56,5 +56,5 @@ malware.controller.datamodules=<%= modules.join(",") %>
 
 #AeroSpike
 aerospike.namespace=malware
-aerospike.servers=<%= @aerospike_ips.nil? ? "127.0.0.1:3000" : (@aerospike_ips.first(5).map{|x| "#{x.name}:3000"}.join(",")) %>
+aerospike.servers=<%= @aerospike_ips.nil? ? "127.0.0.1:3000" : (@aerospike_ips.first(5).map{|x| "#{x}:3000"}.join(",")) %>
 aerospike.clientTimeout=500
